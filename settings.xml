@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <localRepository>D:\SoftWare\apache-maven-3.3.3\localRepository</localRepository>
+    <pluginGroups/>
+
+    <proxies/>
+
+    <servers>
+        <server>
+            <id>snapshots</id>
+            <username>cloudplatform</username>
+            <password>CloudPlatform!@#</password>
+        </server>
+        <server>
+            <id>releases</id>
+            <username>cloudplatform</username>
+            <password>CloudPlatform!@#</password>
+        </server>
+        <server>
+            <id>nexus_snapshots</id>
+            <username>developer</username>
+            <password>developer</password>
+        </server>
+        <server>
+            <id>nexus_releases</id>
+            <username>developer</username>
+            <password>developer</password>
+        </server>
+    </servers>
+
+    <mirrors>
+        <mirror>
+            <id>central</id>
+            <mirrorOf>*</mirrorOf>
+            <url>http://szg1.artifactory.inhuawei.com/artifactory/sz-maven-public</url>
+        </mirror>
+        <mirror>
+            <id>central_maven</id>
+            <mirrorOf>*</mirrorOf>
+            <url>http://mvnrepository.com</url>
+        </mirror>
+    </mirrors>
+
+    <profiles>
+        <profile>
+            <id>central</id>
+            <repositories>
+                <repository>
+                    <id>releases_clouddragon</id>
+                    <url>http://szg1.artifactory.inhuawei.com/artifactory/sz-maven-public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>releases_cloudservice</id>
+                    <url>http://szg1.artifactory.inhuawei.com/artifactory/Product-CloudPlatform-release</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>snapshot_cloudservice</id>
+                    <url>http://szg1.artifactory.inhuawei.com/artifactory/Product-CloudPlatform-snapshot</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+            </repositories>
+            <pluginRepositories>
+                <pluginRepository>
+                    <id>releases</id>
+                    <url>http://szg1.artifactory.inhuawei.com/artifactory/sz-maven-public</url>
+                    <releases>
+                        <enabled>true</enabled>
+                    </releases>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </pluginRepository>
+            </pluginRepositories>
+        </profile>
+
+        <profile>
+            <id>maven central</id>
+            <repositories>
+                <repository>
+                    <id>maven repositories</id>
+                    <url>http://mvnrepository.com</url>
+                </repository>
+            </repositories>
+        </profile>
+    </profiles>
+
+    <activeProfiles>
+        <activeProfile>central</activeProfile>
+        <activeProfile>maven central</activeProfile>
+    </activeProfiles>
+
+</settings>
