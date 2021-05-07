@@ -10,10 +10,10 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class AuthService {
+public class AuthenticationService {
     private final UserSessionRepository userSessionRepository;
 
-    public AuthService(UserSessionRepository userSessionRepository) {
+    public AuthenticationService(UserSessionRepository userSessionRepository) {
         this.userSessionRepository = userSessionRepository;
     }
 

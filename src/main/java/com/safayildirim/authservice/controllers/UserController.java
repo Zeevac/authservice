@@ -48,7 +48,12 @@ public class UserController {
     }
 
     @GetMapping(value = "/calculate-sum")
-    public int calculateSum(@RequestParam(value = "sessionId") String sessionID, @RequestParam int a, @RequestParam int b) {
-        return calculatorService.calculateSum(sessionID, a, b);
+    public int calculateSum(@RequestParam(value = "sessionId") String sessionId, @RequestParam int a, @RequestParam int b) {
+        return calculatorService.calculateSum(sessionId, a, b);
+    }
+
+    @GetMapping(value = "/calculate-subtract")
+    public int calculateSubtract(@RequestParam(value = "sessionId") String sessionId, @RequestParam int a, @RequestParam int b) {
+        return calculatorService.calculateSubtract(sessionId, a, b);
     }
 }

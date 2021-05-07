@@ -23,19 +23,19 @@ public class UserService {
     private final UserRepository repository;
     private final UserSessionRepository userSessionRepository;
     private final ResetPasswordRepository resetPasswordRepository;
-    private final AuthService authService;
+    private final AuthenticationService authenticationService;
 
-    public UserService(UserRepository repository, UserSessionRepository userSessionRepository, ResetPasswordRepository resetPasswordRepository, AuthService authService) {
+    public UserService(UserRepository repository, UserSessionRepository userSessionRepository, ResetPasswordRepository resetPasswordRepository, AuthenticationService authenticationService) {
         this.repository = repository;
         this.userSessionRepository = userSessionRepository;
         this.resetPasswordRepository = resetPasswordRepository;
-        this.authService = authService;
+        this.authenticationService = authenticationService;
     }
 
     public UserLoginInfoResponse login(String sessionID) {
         UserLoginInfoResponse response = new UserLoginInfoResponse();
         CustomUser customUser = new CustomUser();
-        UserSession userSession = authService.checkSessionValid(sessionID);
+        UserSession userSession = authenticationService.checkSessionValid(sessionID);
         BeanUtils.copyProperties(userSession.getUser(), customUser);
         response.setUser(customUser);
         return response;

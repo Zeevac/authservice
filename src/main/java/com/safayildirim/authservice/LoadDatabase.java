@@ -20,7 +20,7 @@ class LoadDatabase {
 
         return args -> {
             log.info("Preloading " + userRepository.save(new User("zeevac", "112233", "sefa_yildirim_54@windowslive.com")));
-            log.info("Preloading " + permissionsRepository.save(new Permission("calculate", 1)));
+            log.info("Preloading " + permissionsRepository.save(new Permission("calculate-sum", 1)));
         };
     }
 }
