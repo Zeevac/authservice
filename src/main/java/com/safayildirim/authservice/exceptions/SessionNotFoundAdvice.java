@@ -1,6 +1,5 @@
-package com.safayildirim.authservice.exceptions.advices;
+package com.safayildirim.authservice.exceptions;
 
-import com.safayildirim.authservice.exceptions.UserNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,12 +7,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class UserNotFoundAdvice {
-
+public class SessionNotFoundAdvice {
     @ResponseBody
-    @ExceptionHandler(UserNotExistException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    String userNotFoundHandler(UserNotExistException e) {
+    @ExceptionHandler(SessionNotFoundException.class)
+    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
+    String sessionNotFoundHandler(SessionNotFoundException e) {
         return e.getMessage();
     }
 }

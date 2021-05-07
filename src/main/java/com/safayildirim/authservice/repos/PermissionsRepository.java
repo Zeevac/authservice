@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 
 public interface PermissionsRepository extends JpaRepository<Permission, Long> {
-    Optional<Permission> findAllByUserIdAndApi(long userId, String api);
+    Optional<Permission> findByUserIdAndApi(long userId, String api);
 }

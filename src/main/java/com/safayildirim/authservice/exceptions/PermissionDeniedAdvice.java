@@ -1,6 +1,5 @@
-package com.safayildirim.authservice.exceptions.advices;
+package com.safayildirim.authservice.exceptions;
 
-import com.safayildirim.authservice.exceptions.SessionNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,11 +7,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class SessionNotFoundAdvice {
+public class PermissionDeniedAdvice {
     @ResponseBody
-    @ExceptionHandler(SessionNotFoundException.class)
-    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
-    String sessionNotFoundHandler(SessionNotFoundException e) {
+    @ExceptionHandler(PermissionDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    String sessionExpiredHandler(PermissionDeniedException e) {
         return e.getMessage();
     }
 }

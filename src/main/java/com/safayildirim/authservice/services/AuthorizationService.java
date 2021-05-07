@@ -1,5 +1,6 @@
 package com.safayildirim.authservice.services;
 
+import com.safayildirim.authservice.exceptions.PermissionDeniedException;
 import com.safayildirim.authservice.models.Permission;
 import com.safayildirim.authservice.repos.PermissionsRepository;
 import org.springframework.stereotype.Service;
@@ -13,6 +14,6 @@ public class AuthorizationService {
     }
 
     public Permission checkIfPermissionGranted(long userId, String api) {
-        return permissionsRepository.findAllByUserIdAndApi(userId, api).orElseThrow(() -> new RuntimeException("Permission denied."));
+        return permissionsRepository.findByUserIdAndApi(userId, api).orElseThrow(PermissionDeniedException::new);
     }
 }

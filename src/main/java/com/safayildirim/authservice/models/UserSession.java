@@ -18,5 +18,5 @@ public class UserSession {
     private String sessionID;
     @OneToOne
     private User user;
-    private LocalDateTime creationDate;
+    private LocalDateTime expireDate;
 }

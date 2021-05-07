@@ -19,5 +19,5 @@ public class ResetPassword {
     @NonNull
     private String username;
     @NonNull
-    private LocalDateTime date;
+    private LocalDateTime expireDate;
 }

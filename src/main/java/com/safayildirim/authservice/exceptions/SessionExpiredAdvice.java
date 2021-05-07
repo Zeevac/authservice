@@ -1,6 +1,5 @@
-package com.safayildirim.authservice.exceptions.advices;
+package com.safayildirim.authservice.exceptions;
 
-import com.safayildirim.authservice.exceptions.LinkExpiredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,11 +7,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class LinkExpiredAdvice {
+public class SessionExpiredAdvice {
     @ResponseBody
-    @ExceptionHandler(LinkExpiredException.class)
+    @ExceptionHandler(SessionExpiredException.class)
     @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
-    String linkExpiredHandler(LinkExpiredException e) {
+    String sessionExpiredHandler(SessionExpiredException e) {
         return e.getMessage();
     }
 }

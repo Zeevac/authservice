@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 public class UserController {
     private final MailService mailService;
     private final UserService userService;
@@ -20,29 +21,29 @@ public class UserController {
         this.calculatorService = calculatorService;
     }
 
-    @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/login")
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) throws Throwable {
         UserLoginResponse response = userService.login(request);
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/login")
     public ResponseEntity<UserLoginInfoResponse> login(@RequestParam(value = "sessionId") String sessionID) {
         UserLoginInfoResponse response = userService.login(sessionID);
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping(value = "/register", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/register")
     public String register(@RequestBody UserRegisterRequest request) {
         return userService.register(request);
     }
 
-    @PostMapping(value = "/reset-password", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/reset-password")
     public String resetPassword(@RequestParam String username) throws Throwable {
         return userService.resetPassword(mailService, username);
     }
 
-    @PutMapping(value = "/reset-password/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/reset-password/{id}")
     public String resetPassword(@PathVariable String id, @RequestBody ResetPasswordRequest request) {
         return userService.resetPassword(id, request);
     }
