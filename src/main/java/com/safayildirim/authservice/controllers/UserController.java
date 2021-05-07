@@ -1,9 +1,6 @@
 package com.safayildirim.authservice.controllers;
 
-import com.safayildirim.authservice.dto.UserLoginInfoResponse;
-import com.safayildirim.authservice.dto.UserLoginRequest;
-import com.safayildirim.authservice.dto.UserLoginResponse;
-import com.safayildirim.authservice.dto.UserRegisterRequest;
+import com.safayildirim.authservice.dto.*;
 import com.safayildirim.authservice.services.MailService;
 import com.safayildirim.authservice.services.UserService;
 import org.springframework.http.MediaType;
@@ -40,5 +37,10 @@ public class UserController {
     @PostMapping(value = "/reset-password", consumes = MediaType.APPLICATION_JSON_VALUE)
     public String resetPassword(@RequestParam String username) throws Throwable {
         return userService.resetPassword(mailService, username);
+    }
+
+    @PutMapping(value = "/reset-password/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public String resetPassword(@PathVariable String id, @RequestBody ResetPasswordRequest request){
+        return userService.resetPassword(id, request);
     }
 }

@@ -1,15 +1,14 @@
 package com.safayildirim.authservice.services;
 
-import com.safayildirim.authservice.dto.UserLoginInfoResponse;
-import com.safayildirim.authservice.dto.UserLoginRequest;
-import com.safayildirim.authservice.dto.UserLoginResponse;
-import com.safayildirim.authservice.dto.UserRegisterRequest;
+import com.safayildirim.authservice.dto.*;
 import com.safayildirim.authservice.exceptions.SessionExpiredException;
 import com.safayildirim.authservice.exceptions.SessionNotFoundException;
 import com.safayildirim.authservice.exceptions.UserNotExistException;
 import com.safayildirim.authservice.models.CustomUser;
+import com.safayildirim.authservice.models.ResetPassword;
 import com.safayildirim.authservice.models.User;
 import com.safayildirim.authservice.models.UserSession;
+import com.safayildirim.authservice.repos.ResetPasswordRepository;
 import com.safayildirim.authservice.repos.UserRepository;
 import com.safayildirim.authservice.repos.UserSessionRepository;
 import org.springframework.beans.BeanUtils;
@@ -25,10 +24,12 @@ import java.util.function.Supplier;
 public class UserService {
     private final UserRepository repository;
     private final UserSessionRepository userSessionRepository;
+    private final ResetPasswordRepository resetPasswordRepository;
 
-    public UserService(UserRepository repository, UserSessionRepository userSessionRepository) {
+    public UserService(UserRepository repository, UserSessionRepository userSessionRepository, ResetPasswordRepository resetPasswordRepository) {
         this.repository = repository;
         this.userSessionRepository = userSessionRepository;
+        this.resetPasswordRepository = resetPasswordRepository;
     }
 
     public UserLoginInfoResponse login(String sessionID) {
@@ -70,7 +71,20 @@ public class UserService {
     public String resetPassword(MailService mailService, String username) throws Throwable {
         User user = repository.findByUsername(username).orElseThrow((Supplier<Throwable>) UserNotExistException::new);
         String email = user.getEmail();
-        mailService.sendMail(email, "Reset Password", "");
+        String uuid = UUID.randomUUID().toString();
+        String generatedLink = String.format("localhost:8080/reset-password/%s", uuid);
+        resetPasswordRepository.save(new ResetPassword(uuid, username));
+        mailService.sendMail(email, "Reset Password", generatedLink);
         return "index";
+    }
+
+    public String resetPassword(String id, ResetPasswordRequest request) {
+        String newPassword = request.getNewPassword();
+        ResetPassword resetPassword = resetPasswordRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
+        String username = resetPassword.getUsername();
+        User user = repository.findByUsername(username).orElseThrow(UserNotExistException::new);
+        user.setPassword(newPassword);
+        repository.save(user);
+        return "Success";
     }
 }
