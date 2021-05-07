@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PutMapping(value = "/reset-password/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public String resetPassword(@PathVariable String id, @RequestBody ResetPasswordRequest request){
+    public String resetPassword(@PathVariable String id, @RequestBody ResetPasswordRequest request) {
         return userService.resetPassword(id, request);
     }
 }

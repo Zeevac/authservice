@@ -1,9 +1,13 @@
 package com.safayildirim.authservice.models;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -14,4 +18,6 @@ public class ResetPassword {
     private String id;
     @NonNull
     private String username;
+    @NonNull
+    private LocalDateTime date;
 }

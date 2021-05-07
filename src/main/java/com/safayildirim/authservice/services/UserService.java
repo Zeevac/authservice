@@ -1,6 +1,7 @@
 package com.safayildirim.authservice.services;
 
 import com.safayildirim.authservice.dto.*;
+import com.safayildirim.authservice.exceptions.LinkExpiredException;
 import com.safayildirim.authservice.exceptions.SessionExpiredException;
 import com.safayildirim.authservice.exceptions.SessionNotFoundException;
 import com.safayildirim.authservice.exceptions.UserNotExistException;
@@ -11,10 +12,10 @@ import com.safayildirim.authservice.models.UserSession;
 import com.safayildirim.authservice.repos.ResetPasswordRepository;
 import com.safayildirim.authservice.repos.UserRepository;
 import com.safayildirim.authservice.repos.UserSessionRepository;
+import com.safayildirim.authservice.utils.DateUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,9 +40,7 @@ public class UserService {
         optionalUserSession.orElseThrow(SessionNotFoundException::new);
         UserSession userSession = optionalUserSession.get();
         BeanUtils.copyProperties(userSession.getUser(), customUser);
-        LocalDateTime sessionDate = userSession.getCreationDate();
-        LocalDateTime currentDate = LocalDateTime.now();
-        long timeDifferenceInMinutes = ((Timestamp.valueOf(currentDate).getTime() - Timestamp.valueOf(sessionDate).getTime()) / (1000 * 60)) % 60;
+        long timeDifferenceInMinutes = DateUtils.calculateDifferenceInMinutes(userSession.getCreationDate());
         if (timeDifferenceInMinutes < 10) {
             response.setUser(customUser);
         } else {
@@ -73,7 +72,7 @@ public class UserService {
         String email = user.getEmail();
         String uuid = UUID.randomUUID().toString();
         String generatedLink = String.format("localhost:8080/reset-password/%s", uuid);
-        resetPasswordRepository.save(new ResetPassword(uuid, username));
+        resetPasswordRepository.save(new ResetPassword(uuid, username, LocalDateTime.now()));
         mailService.sendMail(email, "Reset Password", generatedLink);
         return "index";
     }
@@ -81,6 +80,8 @@ public class UserService {
     public String resetPassword(String id, ResetPasswordRequest request) {
         String newPassword = request.getNewPassword();
         ResetPassword resetPassword = resetPasswordRepository.findById(id).orElseThrow(() -> new RuntimeException(""));
+        long timeDifferenceInMinutes = DateUtils.calculateDifferenceInMinutes(resetPassword.getDate());
+        if (timeDifferenceInMinutes > 1) throw new LinkExpiredException();
         String username = resetPassword.getUsername();
         User user = repository.findByUsername(username).orElseThrow(UserNotExistException::new);
         user.setPassword(newPassword);
