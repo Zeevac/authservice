@@ -6,7 +6,8 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import java.util.Date;
+import javax.persistence.OneToOne;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -15,6 +16,7 @@ import java.util.Date;
 public class UserSession {
     @Id
     private String sessionID;
-    private String username;
-    private Date creationDate;
+    @OneToOne
+    private User user;
+    private LocalDateTime creationDate;
 }

@@ -1,21 +1,27 @@
 package com.safayildirim.authservice.services;
 
+import com.safayildirim.authservice.dto.UserLoginInfoResponse;
 import com.safayildirim.authservice.dto.UserLoginRequest;
 import com.safayildirim.authservice.dto.UserLoginResponse;
 import com.safayildirim.authservice.dto.UserRegisterRequest;
+import com.safayildirim.authservice.exceptions.SessionExpiredException;
+import com.safayildirim.authservice.exceptions.SessionNotFoundException;
 import com.safayildirim.authservice.exceptions.UserNotExistException;
+import com.safayildirim.authservice.models.CustomUser;
 import com.safayildirim.authservice.models.User;
 import com.safayildirim.authservice.models.UserSession;
 import com.safayildirim.authservice.repos.UserRepository;
 import com.safayildirim.authservice.repos.UserSessionRepository;
-import org.springframework.stereotype.Controller;
+import org.springframework.beans.BeanUtils;
+import org.springframework.stereotype.Service;
 
-import java.util.Date;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-@Controller
+@Service
 public class UserService {
     private final UserRepository repository;
     private final UserSessionRepository userSessionRepository;
@@ -25,25 +31,31 @@ public class UserService {
         this.userSessionRepository = userSessionRepository;
     }
 
+    public UserLoginInfoResponse login(String sessionID) {
+        UserLoginInfoResponse response = new UserLoginInfoResponse();
+        CustomUser customUser = new CustomUser();
+        Optional<UserSession> optionalUserSession = userSessionRepository.findBySessionID(sessionID);
+        optionalUserSession.orElseThrow(SessionNotFoundException::new);
+        UserSession userSession = optionalUserSession.get();
+        BeanUtils.copyProperties(userSession.getUser(), customUser);
+        LocalDateTime sessionDate = userSession.getCreationDate();
+        LocalDateTime currentDate = LocalDateTime.now();
+        long timeDifferenceInMinutes = ((Timestamp.valueOf(currentDate).getTime() - Timestamp.valueOf(sessionDate).getTime()) / (1000 * 60)) % 60;
+        if (timeDifferenceInMinutes < 10) {
+            response.setUser(customUser);
+        } else {
+            throw new SessionExpiredException();
+        }
+        return response;
+    }
+
     public UserLoginResponse login(UserLoginRequest request) throws Throwable {
         String username = request.getUsername();
         String password = request.getPassword();
-        UserLoginResponse response = null;
-        repository.findByUsernameAndPassword(username, password).orElseThrow((Supplier<Throwable>) UserNotExistException::new);
-        Optional<UserSession> optionalUserSession = userSessionRepository.findByUsername(username);
-        if (optionalUserSession.isPresent()) {
-            UserSession userSession = optionalUserSession.get();
-            Date sessionDate = userSession.getCreationDate();
-            Date currentDate = new Date();
-            long timeDifferenceInMinutes = ((currentDate.getTime() - sessionDate.getTime()) / (1000 * 60)) % 60;
-            if (timeDifferenceInMinutes < 10) {
-                response = new UserLoginResponse(userSession.getSessionID());
-            }
-        } else {
-            String sessionID = UUID.randomUUID().toString();
-            response = new UserLoginResponse(sessionID);
-            userSessionRepository.save(new UserSession(sessionID, username, new Date()));
-        }
+        User user = repository.findByUsernameAndPassword(username, password).orElseThrow((Supplier<Throwable>) UserNotExistException::new);
+        String sessionID = UUID.randomUUID().toString();
+        UserLoginResponse response = new UserLoginResponse(sessionID);
+        userSessionRepository.save(new UserSession(sessionID, user, LocalDateTime.now()));
         return response;
     }
 

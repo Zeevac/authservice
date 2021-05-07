@@ -3,11 +3,11 @@ package com.safayildirim.authservice.services;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 
 import java.util.Properties;
 
-@Controller
+@Service
 public class MailService {
 
     private JavaMailSender getJavaMailSender() {

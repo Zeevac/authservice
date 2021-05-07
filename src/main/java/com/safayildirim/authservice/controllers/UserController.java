@@ -1,5 +1,6 @@
 package com.safayildirim.authservice.controllers;
 
+import com.safayildirim.authservice.dto.UserLoginInfoResponse;
 import com.safayildirim.authservice.dto.UserLoginRequest;
 import com.safayildirim.authservice.dto.UserLoginResponse;
 import com.safayildirim.authservice.dto.UserRegisterRequest;
@@ -7,10 +8,7 @@ import com.safayildirim.authservice.services.MailService;
 import com.safayildirim.authservice.services.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class UserController {
@@ -25,6 +23,12 @@ public class UserController {
     @PostMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) throws Throwable {
         UserLoginResponse response = userService.login(request);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping(value = "/login", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UserLoginInfoResponse> login(@RequestParam(value = "sessionId") String sessionID) {
+        UserLoginInfoResponse response = userService.login(sessionID);
         return ResponseEntity.ok(response);
     }
 
