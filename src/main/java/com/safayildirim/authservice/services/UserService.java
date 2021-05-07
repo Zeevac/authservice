@@ -2,8 +2,6 @@ package com.safayildirim.authservice.services;
 
 import com.safayildirim.authservice.dto.*;
 import com.safayildirim.authservice.exceptions.LinkExpiredException;
-import com.safayildirim.authservice.exceptions.SessionExpiredException;
-import com.safayildirim.authservice.exceptions.SessionNotFoundException;
 import com.safayildirim.authservice.exceptions.UserNotExistException;
 import com.safayildirim.authservice.models.CustomUser;
 import com.safayildirim.authservice.models.ResetPassword;
@@ -17,7 +15,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
@@ -26,26 +23,21 @@ public class UserService {
     private final UserRepository repository;
     private final UserSessionRepository userSessionRepository;
     private final ResetPasswordRepository resetPasswordRepository;
+    private final AuthService authService;
 
-    public UserService(UserRepository repository, UserSessionRepository userSessionRepository, ResetPasswordRepository resetPasswordRepository) {
+    public UserService(UserRepository repository, UserSessionRepository userSessionRepository, ResetPasswordRepository resetPasswordRepository, AuthService authService) {
         this.repository = repository;
         this.userSessionRepository = userSessionRepository;
         this.resetPasswordRepository = resetPasswordRepository;
+        this.authService = authService;
     }
 
     public UserLoginInfoResponse login(String sessionID) {
         UserLoginInfoResponse response = new UserLoginInfoResponse();
         CustomUser customUser = new CustomUser();
-        Optional<UserSession> optionalUserSession = userSessionRepository.findBySessionID(sessionID);
-        optionalUserSession.orElseThrow(SessionNotFoundException::new);
-        UserSession userSession = optionalUserSession.get();
+        UserSession userSession = authService.checkSessionValid(sessionID);
         BeanUtils.copyProperties(userSession.getUser(), customUser);
-        long timeDifferenceInMinutes = DateUtils.calculateDifferenceInMinutes(userSession.getCreationDate());
-        if (timeDifferenceInMinutes < 10) {
-            response.setUser(customUser);
-        } else {
-            throw new SessionExpiredException();
-        }
+        response.setUser(customUser);
         return response;
     }
 
