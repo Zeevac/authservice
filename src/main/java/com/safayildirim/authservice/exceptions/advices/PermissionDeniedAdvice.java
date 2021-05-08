@@ -1,5 +1,6 @@
-package com.safayildirim.authservice.exceptions;
+package com.safayildirim.authservice.exceptions.advices;
 
+import com.safayildirim.authservice.exceptions.PermissionDeniedException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -7,11 +8,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ControllerAdvice
-public class SessionExpiredAdvice {
+public class PermissionDeniedAdvice {
     @ResponseBody
-    @ExceptionHandler(SessionExpiredException.class)
-    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
-    String sessionExpiredHandler(SessionExpiredException e) {
+    @ExceptionHandler(PermissionDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    String sessionExpiredHandler(PermissionDeniedException e) {
         return e.getMessage();
     }
 }

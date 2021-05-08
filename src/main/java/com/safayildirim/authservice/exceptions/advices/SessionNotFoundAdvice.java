@@ -1,5 +1,6 @@
-package com.safayildirim.authservice.exceptions;
+package com.safayildirim.authservice.exceptions.advices;
 
+import com.safayildirim.authservice.exceptions.SessionNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
