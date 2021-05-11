@@ -4,22 +4,19 @@ import com.safayildirim.authservice.dto.*;
 import com.safayildirim.authservice.services.CalculatorService;
 import com.safayildirim.authservice.services.MailService;
 import com.safayildirim.authservice.services.UserService;
+import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+@AllArgsConstructor
 public class UserController {
     private final MailService mailService;
     private final UserService userService;
     private final CalculatorService calculatorService;
 
-    public UserController(UserService userService, MailService mailService, CalculatorService calculatorService) {
-        this.userService = userService;
-        this.mailService = mailService;
-        this.calculatorService = calculatorService;
-    }
 
     @PostMapping(value = "/login")
     public ResponseEntity<UserLoginResponse> login(@RequestBody UserLoginRequest request) throws Throwable {

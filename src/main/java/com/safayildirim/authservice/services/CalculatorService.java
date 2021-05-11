@@ -1,18 +1,14 @@
 package com.safayildirim.authservice.services;
 
 import com.safayildirim.authservice.models.UserSession;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class CalculatorService {
-
     private final AuthenticationService authenticationService;
     private final AuthorizationService authorizationService;
-
-    public CalculatorService(AuthenticationService authenticationService, AuthorizationService authorizationService) {
-        this.authenticationService = authenticationService;
-        this.authorizationService = authorizationService;
-    }
 
     public int calculateSum(String sessionId, int a, int b) {
         UserSession userSession = authenticationService.checkSessionValid(sessionId);

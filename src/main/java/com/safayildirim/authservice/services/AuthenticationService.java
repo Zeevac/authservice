@@ -4,6 +4,7 @@ import com.safayildirim.authservice.exceptions.LinkExpiredException;
 import com.safayildirim.authservice.exceptions.SessionNotFoundException;
 import com.safayildirim.authservice.models.UserSession;
 import com.safayildirim.authservice.repos.UserSessionRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -13,12 +14,9 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service
+@AllArgsConstructor
 public class AuthenticationService {
     private final UserSessionRepository userSessionRepository;
-
-    public AuthenticationService(UserSessionRepository userSessionRepository) {
-        this.userSessionRepository = userSessionRepository;
-    }
 
     public UserSession checkSessionValid(String sessionId) {
         Optional<UserSession> optionalUserSession = userSessionRepository.findBySessionID(sessionId);

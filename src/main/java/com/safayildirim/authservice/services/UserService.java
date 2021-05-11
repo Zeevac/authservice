@@ -11,6 +11,7 @@ import com.safayildirim.authservice.models.UserSession;
 import com.safayildirim.authservice.repos.ResetPasswordRepository;
 import com.safayildirim.authservice.repos.UserRepository;
 import com.safayildirim.authservice.repos.UserSessionRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -20,20 +21,13 @@ import java.util.UUID;
 import java.util.function.Supplier;
 
 @Service
+@AllArgsConstructor
 public class UserService{
     private final UserRepository repository;
     private final UserSessionRepository userSessionRepository;
     private final ResetPasswordRepository resetPasswordRepository;
     private final AuthenticationService authenticationService;
     private final PasswordEncoder passwordEncoder;
-
-    public UserService(UserRepository repository, UserSessionRepository userSessionRepository, ResetPasswordRepository resetPasswordRepository, AuthenticationService authenticationService, PasswordEncoder passwordEncoder) {
-        this.repository = repository;
-        this.userSessionRepository = userSessionRepository;
-        this.resetPasswordRepository = resetPasswordRepository;
-        this.authenticationService = authenticationService;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public UserLoginInfoResponse login(String sessionID) {
         UserLoginInfoResponse response = new UserLoginInfoResponse();
