@@ -24,8 +24,8 @@ public class UserController {
     }
 
     @GetMapping(value = "/login")
-    public ResponseEntity<UserLoginInfoResponse> login(@RequestParam(value = "sessionId") String sessionID) {
-        UserLoginInfoResponse response = authenticationService.login(sessionID);
+    public ResponseEntity<UserLoginInfoResponse> login(@RequestParam(value = "token") String token) throws Throwable {
+        UserLoginInfoResponse response = authenticationService.login(token);
         return ResponseEntity.ok(response);
     }
 
@@ -45,12 +45,14 @@ public class UserController {
     }
 
     @GetMapping(value = "/calculate-sum")
-    public int calculateSum(@RequestParam(value = "sessionId") String sessionId, @RequestParam int a, @RequestParam int b) {
+    public int calculateSum(@RequestParam(value = "sessionId") String sessionId, @RequestParam int a,
+                            @RequestParam int b) throws Throwable {
         return calculatorService.calculateSum(sessionId, a, b);
     }
 
     @GetMapping(value = "/calculate-subtract")
-    public int calculateSubtract(@RequestParam(value = "sessionId") String sessionId, @RequestParam int a, @RequestParam int b) {
+    public int calculateSubtract(@RequestParam(value = "sessionId") String sessionId, @RequestParam int a,
+                                 @RequestParam int b) throws Throwable {
         return calculatorService.calculateSubtract(sessionId, a, b);
     }
 }

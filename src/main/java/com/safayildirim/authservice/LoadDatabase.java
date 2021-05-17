@@ -1,7 +1,6 @@
 package com.safayildirim.authservice;
 
 import com.safayildirim.authservice.models.Permission;
-import com.safayildirim.authservice.models.User;
 import com.safayildirim.authservice.repos.PermissionsRepository;
 import com.safayildirim.authservice.repos.UserRepository;
 import org.slf4j.Logger;

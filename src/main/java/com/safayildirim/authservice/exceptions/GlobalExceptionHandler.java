@@ -16,8 +16,11 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Validation error. Check 'errors' field for details.");
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+                                                                  HttpHeaders headers, HttpStatus status,
+                                                                  WebRequest request) {
+        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Validation error. " +
+                "Check 'errors' field for details.");
         for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
             errorResponse.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
         }
@@ -30,15 +33,9 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(e, HttpStatus.REQUEST_TIMEOUT, webRequest);
     }
 
-    @ExceptionHandler(SessionExpiredException.class)
+    @ExceptionHandler(InvalidTokenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
-    ResponseEntity<Object> sessionExpiredHandler(SessionExpiredException e, WebRequest webRequest) {
-        return buildErrorResponse(e, HttpStatus.FORBIDDEN, webRequest);
-    }
-
-    @ExceptionHandler(SessionNotFoundException.class)
-    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
-    ResponseEntity<Object> sessionNotFoundHandler(SessionNotFoundException e, WebRequest webRequest) {
+    ResponseEntity<Object> invalidTokenHandler(InvalidTokenException e, WebRequest webRequest) {
         return buildErrorResponse(e, HttpStatus.REQUEST_TIMEOUT, webRequest);
     }
 
@@ -55,7 +52,8 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @Override
-    public ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+    public ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
+                                                          HttpStatus status, WebRequest request) {
         return buildErrorResponse(ex, status, request);
     }
 
