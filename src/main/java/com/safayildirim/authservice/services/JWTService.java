@@ -13,7 +13,8 @@ import java.util.function.Function;
 
 @Service
 public class JWTService {
-    private final String SECRET_KEY = "secret_key";
+    private static final String SECRET = "SECRET_KEY";
+    private static final long EXPIRATION_TIME = 5 * 60 * 60 * 1000;
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -29,7 +30,7 @@ public class JWTService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -45,8 +46,8 @@ public class JWTService {
         return Jwts.builder().setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 5 * 60 * 60 * 1000))
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SignatureAlgorithm.HS256, SECRET)
                 .compact();
     }
 

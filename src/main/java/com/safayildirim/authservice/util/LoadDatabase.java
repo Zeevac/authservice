@@ -1,4 +1,4 @@
-package com.safayildirim.authservice;
+package com.safayildirim.authservice.util;
 
 import com.safayildirim.authservice.models.Permission;
 import com.safayildirim.authservice.repos.PermissionsRepository;
