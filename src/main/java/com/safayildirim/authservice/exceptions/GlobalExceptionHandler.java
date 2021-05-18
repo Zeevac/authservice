@@ -36,7 +36,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(InvalidTokenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     ResponseEntity<Object> invalidTokenHandler(InvalidTokenException e, WebRequest webRequest) {
-        return buildErrorResponse(e, HttpStatus.REQUEST_TIMEOUT, webRequest);
+        return buildErrorResponse(e, HttpStatus.FORBIDDEN, webRequest);
     }
 
     @ExceptionHandler(ExpiredTokenException.class)
