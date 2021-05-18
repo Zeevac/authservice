@@ -39,6 +39,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(e, HttpStatus.REQUEST_TIMEOUT, webRequest);
     }
 
+    @ExceptionHandler(ExpiredTokenException.class)
+    @ResponseStatus(HttpStatus.REQUEST_TIMEOUT)
+    ResponseEntity<Object> expiredTokenHandler(ExpiredTokenException e, WebRequest webRequest) {
+        return buildErrorResponse(e, HttpStatus.REQUEST_TIMEOUT, webRequest);
+    }
+
     @ExceptionHandler(UsernameAlreadyTakenException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     ResponseEntity<Object> usernameTakenHandler(UsernameAlreadyTakenException e, WebRequest webRequest) {

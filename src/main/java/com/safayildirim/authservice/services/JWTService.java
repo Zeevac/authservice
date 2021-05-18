@@ -1,9 +1,9 @@
 package com.safayildirim.authservice.services;
 
+import com.safayildirim.authservice.exceptions.ExpiredTokenException;
+import com.safayildirim.authservice.exceptions.InvalidTokenException;
 import com.safayildirim.authservice.models.User;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -30,7 +30,13 @@ public class JWTService {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
+        try {
+            return Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
+        } catch (ExpiredJwtException e) {
+            throw new ExpiredTokenException();
+        } catch (UnsupportedJwtException | MalformedJwtException | SignatureException | IllegalArgumentException e) {
+            throw new InvalidTokenException();
+        }
     }
 
     private Boolean isTokenExpired(String token) {
