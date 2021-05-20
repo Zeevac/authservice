@@ -57,6 +57,12 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return buildErrorResponse(e, HttpStatus.NOT_FOUND, webRequest);
     }
 
+    @ExceptionHandler(PermissionDeniedException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    ResponseEntity<Object> permissionDeniedHandler(PermissionDeniedException e, WebRequest webRequest) {
+        return buildErrorResponse(e, HttpStatus.NOT_FOUND, webRequest);
+    }
+
     @Override
     public ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers,
                                                           HttpStatus status, WebRequest request) {

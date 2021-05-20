@@ -1,9 +1,13 @@
 package com.safayildirim.authservice.controllers;
 
-import com.safayildirim.authservice.dto.*;
+import com.safayildirim.authservice.dto.ResetPasswordRequest;
+import com.safayildirim.authservice.dto.UserLoginRequest;
+import com.safayildirim.authservice.dto.UserLoginResponse;
+import com.safayildirim.authservice.dto.UserRegisterRequest;
 import com.safayildirim.authservice.services.AuthenticationService;
 import com.safayildirim.authservice.services.CalculatorService;
 import com.safayildirim.authservice.services.MailService;
+import com.safayildirim.authservice.util.BearerTokenUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +27,6 @@ public class UserController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping(value = "/login")
-    public ResponseEntity<UserLoginInfoResponse> login(@RequestParam(value = "token") String token) throws Throwable {
-        UserLoginInfoResponse response = authenticationService.login(token);
-        return ResponseEntity.ok(response);
-    }
-
     @PostMapping(value = "/register")
     public String register(@RequestBody UserRegisterRequest request) {
         return authenticationService.register(request);
@@ -45,14 +43,16 @@ public class UserController {
     }
 
     @GetMapping(value = "/calculate-sum")
-    public int calculateSum(@RequestParam(value = "sessionId") String sessionId, @RequestParam int a,
+    public int calculateSum(@RequestParam int a,
                             @RequestParam int b) throws Throwable {
-        return calculatorService.calculateSum(sessionId, a, b);
+        String token = BearerTokenUtil.getBearerTokenHeader();
+        return calculatorService.calculateSum(token, a, b);
     }
 
     @GetMapping(value = "/calculate-subtract")
-    public int calculateSubtract(@RequestParam(value = "sessionId") String sessionId, @RequestParam int a,
+    public int calculateSubtract(@RequestParam int a,
                                  @RequestParam int b) throws Throwable {
-        return calculatorService.calculateSubtract(sessionId, a, b);
+        String token = BearerTokenUtil.getBearerTokenHeader();
+        return calculatorService.calculateSubtract(token, a, b);
     }
 }

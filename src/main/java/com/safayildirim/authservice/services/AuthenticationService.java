@@ -31,19 +31,6 @@ public class AuthenticationService {
     private final JWTService jwtService;
     private PasswordEncoder passwordEncoder;
 
-    public UserLoginInfoResponse login(String token) throws Throwable {
-        UserLoginInfoResponse response = new UserLoginInfoResponse();
-        CustomUser customUser = new CustomUser();
-        String username = jwtService.extractUsername(token);
-        User user =
-                userRepository.findByUsername(username).orElseThrow((Supplier<Throwable>) UserNotFoundException::new);
-        if (!jwtService.validateToken(token))
-            throw new InvalidTokenException();
-        BeanUtils.copyProperties(user, customUser);
-        response.setUser(customUser);
-        return response;
-    }
-
     public UserLoginResponse login(UserLoginRequest request) throws Throwable {
         String username = request.getUsername();
         String password = request.getPassword();

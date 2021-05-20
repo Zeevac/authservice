@@ -39,7 +39,7 @@ public class JWTService {
         }
     }
 
-    private Boolean isTokenExpired(String token) {
+    private boolean isTokenExpired(String token) {
         return extractExpiration(token).before(new Date());
     }
 
@@ -57,7 +57,7 @@ public class JWTService {
                 .compact();
     }
 
-    public Boolean validateToken(String token) {
+    public boolean validateToken(String token) {
         return !isTokenExpired(token);
     }
 }
